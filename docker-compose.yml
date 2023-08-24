@@ -1,0 +1,25 @@
+version: '3.7'
+services:
+
+  llama_local:
+    container_name: llama_local
+    build: 
+      context: .
+    environment:
+      - PYTHONUNBUFFERED=1
+      - MODEL=/models/${MODEL_NAME}
+      - N_GPU_LAYERS=${N_GPU_LAYERS:-35}
+    ports:
+      - ${PORT:-8000}:8000
+    volumes:
+      - ./models:/models
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
+
+
